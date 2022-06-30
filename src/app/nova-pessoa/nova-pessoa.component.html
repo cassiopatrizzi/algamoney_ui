@@ -1,0 +1,53 @@
+<div class="container">
+
+  <div class="p-grid p-formgrid">
+    <div class="p-col-12">
+      <h1>Nova Pessoa</h1>
+    </div>
+
+    <div class="p-field p-col-12 p-fluid">
+      <label>Nome</label>
+      <input pInputText type="text">
+    </div>
+
+    <div class="p-field p-col-12 p-md-4 p-fluid">
+      <label>Logradouro</label>
+      <input pInputText type="text">
+    </div>
+
+    <div class="p-field p-col-3 p-md-4">
+      <label>Número</label><br>
+      <input pInputText type="text">
+    </div>
+
+    <div class="p-field p-col-12 p-md-4">
+      <label>Complemento</label><br>
+      <input pInputText type="text">
+    </div>
+
+    <div class="p-field p-col-12 p-md-4">
+      <label>Bairro</label><br>
+      <input pInputText type="text">
+
+      <label>CEP</label>
+      <p-inputMask [(ngModel)]="cep" mask="99.999-999"></p-inputMask> <!-- slotchar="" (sem sublinhado)-->
+    </div>
+
+    <div class="p-field p-col-12 p-md-4 p-fluid">
+      <label>Cidade</label><br>
+      <input pInputText type="text">
+    </div>
+
+    <div class="p-field p-col-12">
+      <label>Estado</label><br>
+      <input pInputText type="text">
+    </div>
+
+    <div class="p-col-12 alinhar-botao">
+      <buttom pButton type="submit" label="Salvar" class="p-button-info"></buttom>
+      <button pButton type="button" label="Novo"></button>
+      <a href="javascript:;">Voltar para a pesquisa</a>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,41 @@
+<div class="container">
+
+  <div class="alert alert-danger" *ngIf="usuarioForm.invalid && usuarioForm.touched">
+    Preencha todos os campos corretamente.
+  </div>
+
+  <form #usuarioForm="ngForm" (ngSubmit)="salvar(usuarioForm)">
+    <div class="mb-3">
+      <label class="form-label">Nome</label>
+      <input [ngStyle]="{'border': nome.hasError('required') || nome.hasError('minlength') ? 'solid 1px red' : 'none'}" type="text" class="form-control" name="primeiroNome"
+        [(ngModel)]="cliente.nome" required minlength="10" #nome="ngModel">
+
+      <div *ngIf="nome.hasError('required') && nome.dirty">Informe um nome</div>
+      <div *ngIf="nome.hasError('minlength') && nome.dirty">O nome deve ser completo</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">E-mail</label>
+      <input [ngStyle]="{'border': email.hasError('required') ? 'solid 1px red' : 'none'}" type="text" class="form-control" name="emailAdress"
+        [(ngModel)]="cliente.email" required email #email="ngModel">
+
+      <div *ngIf="email.invalid && email.dirty">Informe um e-mail válido</div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Profissão</label>
+      <select [ngStyle]="{'border': profissao.hasError('required') ? 'solid 1px red' : 'none'}" class="form-control" name="profissao"
+        [(ngModel)]="cliente.profissao" required #profissao="ngModel" >
+        <option value="">Selecione</option>
+        <option *ngFor="let profissao of profissoes"
+          [value]="profissao.id">{{ profissao.funcao }}</option>
+      </select>
+
+      <div *ngIf="profissao.invalid && profissao.dirty">Selecione uma profissão</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary"
+      [disabled]="usuarioForm.invalid">Salvar</button>
+  </form>
+
+</div>
