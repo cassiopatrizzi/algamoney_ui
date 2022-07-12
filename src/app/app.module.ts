@@ -1,4 +1,3 @@
-import { SharedModule } from './shared/shared.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -17,19 +16,15 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
 
 import { AppComponent } from './app.component';
-import { FormularioComponent } from './formulario/formulario.component';
-import { LancamentosGridComponent } from './lancamentos/lancamentos-grid/lancamentos-grid.component';
 import { HttpClientModule } from '@angular/common/http';
-import { LancamentosPesquisaComponent } from 'src/app/lancamentos/lancamentos-pesquisa/lancamentos-pesquisa.component';
 import { LancamentoService } from './lancamentos/lancamento.service';
 import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
+import { LancamentosModule } from './lancamentos/lancamentos.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    FormularioComponent,
-    LancamentosGridComponent,
-    LancamentosPesquisaComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +43,8 @@ import { CoreModule } from './core/core.module';
     InputNumberModule,
     HttpClientModule,
     CoreModule,
-    SharedModule
+    SharedModule,
+    LancamentosModule
   ],
 
   providers: [LancamentoService],
