@@ -1,3 +1,4 @@
+import { SharedModule } from './shared/shared.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -16,23 +17,19 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputMaskModule } from 'primeng/inputmask';
 
 import { AppComponent } from './app.component';
-import { LancamentosPesquisaComponent } from './lancamentos-pesquisa/lancamentos-pesquisa.component';
-import { LancamentoCadastroComponent } from './lancamento-cadastro/lancamento-cadastro.component';
-import { NavbarComponent } from './navbar/navbar.component';
 import { FormularioComponent } from './formulario/formulario.component';
-import { NovaPessoaComponent } from './nova-pessoa/nova-pessoa.component';
-import { MessageComponent } from './message/message.component';
-
+import { LancamentosGridComponent } from './lancamentos/lancamentos-grid/lancamentos-grid.component';
+import { HttpClientModule } from '@angular/common/http';
+import { LancamentosPesquisaComponent } from 'src/app/lancamentos/lancamentos-pesquisa/lancamentos-pesquisa.component';
+import { LancamentoService } from './lancamentos/lancamento.service';
+import { CoreModule } from './core/core.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LancamentosPesquisaComponent,
-    NavbarComponent,
     FormularioComponent,
-    LancamentoCadastroComponent,
-    NovaPessoaComponent,
-    MessageComponent
+    LancamentosGridComponent,
+    LancamentosPesquisaComponent
   ],
   imports: [
     BrowserModule,
@@ -48,10 +45,13 @@ import { MessageComponent } from './message/message.component';
     SelectButtonModule,
     DropdownModule,
     InputMaskModule,
-    InputNumberModule
-
+    InputNumberModule,
+    HttpClientModule,
+    CoreModule,
+    SharedModule
   ],
-  providers: [],
+
+  providers: [LancamentoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
