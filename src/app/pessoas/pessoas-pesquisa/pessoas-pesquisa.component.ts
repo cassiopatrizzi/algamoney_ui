@@ -1,19 +1,73 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+
+import { LazyLoadEvent } from 'primeng/api';
+
+import { PessoaService, PessoaFiltro } from '../pessoa.service'
 
 @Component({
   selector: 'app-pessoas-pesquisa',
   templateUrl: './pessoas-pesquisa.component.html',
   styleUrls: ['./pessoas-pesquisa.component.css']
 })
-export class PessoasPesquisaComponent{
+export class PessoasPesquisaComponent {
+  totalRegistros = 0;
+  filtro = new PessoaFiltro()
+  pessoas: any[] = [];
+  confirmationService: any;
+  grid: any;
+  messageService: any;
+  errorHandler: any;
 
-  pessoas = [
-    { nome: 'Manoel Pinheiro', cidade: 'Uberlândia', estado: 'MG', ativo: true },
-    { nome: 'Sebastião da Silva', cidade: 'São Paulo', estado: 'SP', ativo: false },
-    { nome: 'Carla Souza', cidade: 'Florianópolis', estado: 'SC', ativo: true },
-    { nome: 'Luís Pereira', cidade: 'Curitiba', estado: 'PR', ativo: true },
-    { nome: 'Vilmar Andrade', cidade: 'Rio de Janeiro', estado: 'RJ', ativo: false },
-    { nome: 'Paula Maria', cidade: 'Uberlândia', estado: 'MG', ativo: true }
-  ];
+  constructor(private pessoaService: PessoaService) { }
 
+  pesquisar(pagina: number = 0): void {
+    this.filtro.pagina = pagina;
+
+    this.pessoaService.pesquisar(this.filtro)
+      .then((dados: any) => {
+        this.pessoas = dados.pessoas;
+        this.totalRegistros = dados.total;
+      });
+  }
+
+  aoMudarPagina(event: LazyLoadEvent) {
+    const pagina = event!.first! / event!.rows!;
+    this.pesquisar(pagina);
+  }
+
+  confirmarExclusao(pessoa: any): void {
+    this.confirmationService.confirm({
+      message: 'Tem certeza que deseja excluir?',
+      accept: () => {
+        this.excluir(pessoa);
+      }
+    });
+  }
+
+  excluir(pessoa: any) {
+
+    this.pessoaService.excluir(pessoa.codigo)
+      .then(
+        () => {
+          this.grid.reset();
+
+          this.messageService.add({ severity: 'success', detail: 'Pessoa excluída com sucesso!' })
+        }
+      )
+      .catch((error) => this.errorHandler.handle(error))
+
+  }
+
+  alternarStatus(pessoa: any): void {
+    const novoStatus = !pessoa.ativo;
+
+    this.pessoaService.mudarStatus(pessoa.codigo, novoStatus)
+      .then(() => {
+        const acao = novoStatus ? 'ativada' : 'desativada';
+
+        pessoa.ativo = novoStatus;
+        this.messageService.add({ severity: 'success', detail: `Pessoa ${acao} com sucesso!` });
+      })
+      .catch(erro => this.errorHandler.handle(erro));
+  }
 }

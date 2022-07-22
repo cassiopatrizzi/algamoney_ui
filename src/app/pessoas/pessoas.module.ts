@@ -29,6 +29,7 @@ import { PessoasPesquisaComponent } from './pessoas-pesquisa/pessoas-pesquisa.co
     TableModule,
     TooltipModule,
     InputMaskModule,
+
     SharedModule
   ],
   exports: [

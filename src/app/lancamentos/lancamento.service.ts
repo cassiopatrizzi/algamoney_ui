@@ -1,8 +1,16 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
-/* import 'rxjs/add/operator/toPromise';
- */
+import { Lancamento } from '../core/model';
+
+export class LancamentoFiltro {
+  descricao?: string
+  dataVencimentoInicio?: Date
+  dataVencimentoFim?: Date
+  pagina: number = 0
+  itensPorPagina: number = 5
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,14 +19,56 @@ export class LancamentoService {
 
   lancamentosUrl = 'http://localhost:8080/lancamentos';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private datePipe: DatePipe) { }
 
-  pesquisar(): Promise<any> {
+  pesquisar(filtro: LancamentoFiltro): Promise<any> {
     const headers = new HttpHeaders()
-      .append('Authorization', 'Basic YWRtaW46YWRtaW4=');
 
-    return this.http.get(`${this.lancamentosUrl}?resumo`, { headers })
+    let params = new HttpParams()
+                      .set('page', filtro.pagina)
+                      .set('size', filtro.itensPorPagina);
+
+
+    if (filtro.descricao) {
+      params = params.set('descricao', filtro.descricao);
+    }
+
+    if (filtro.dataVencimentoInicio) {
+      params = params.set('dataVencimentoDe', this.datePipe.transform(filtro.dataVencimentoInicio, 'yyyy-MM-dd')!);
+    }
+
+    if (filtro.dataVencimentoFim) {
+      params = params.set('dataVencimentoAte', this.datePipe.transform(filtro.dataVencimentoFim, 'yyyy-MM-dd')!);
+    }
+
+    return this.http.get(`${this.lancamentosUrl}?resumo`, { headers, params })
       .toPromise()
-      .then((response: any) => response['content']);
+      .then((response : any) => {
+        const lancamentos = response['content'];
+
+        const resultado = {
+          lancamentos,
+          total: response['totalElements']
+        };
+
+        return resultado;
+      });
   }
+
+  excluir(codigo: number): Promise<void> {
+    const headers = new HttpHeaders()
+
+    return this.http.delete<void>(`${this.lancamentosUrl}/${codigo}`, { headers })
+      .toPromise();
+  }
+
+  adicionar(lancamento: Lancamento): Promise<any> {
+    const headers = new HttpHeaders()
+      .append('Content-Type', 'application/json');
+
+    return this.http.post<Lancamento>(this.lancamentosUrl, lancamento, { headers })
+      .toPromise();
+  }
+
 }
